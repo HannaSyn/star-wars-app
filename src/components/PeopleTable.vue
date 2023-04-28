@@ -8,6 +8,7 @@ import { useRoute, useRouter } from 'vue-router'
 import { debounce } from 'vue-debounce'
 import type { Person } from '@/types/Person'
 import { getConvertedDateTime } from '@/helpers/convertDate'
+import { EXPIRATION_TIME } from '@/constants'
 
 const props = defineProps<{
   nameInputValue: string
@@ -59,9 +60,6 @@ const columns = [
 const router = useRouter()
 const route = useRoute()
 
-const cachedRelation = localStorage.getItem('cachedRelation')
-  ? JSON.parse(localStorage.getItem('cachedRelation') as string)
-  : {}
 const currentPage = ref((route.query.page as any) || 1)
 const isPopupOpened = ref(false)
 const activeSort = ref('')
@@ -129,18 +127,25 @@ const loadPeople = async (page: number, inputValue: string) => {
 const setPlanetToPopup = async (person: Person) => {
   emit('checkLoading', true)
   const url = person.homeworld
-  if (cachedRelation[url]) {
-    const planet = JSON.parse(localStorage.getItem(cachedRelation[url]) as string)
-    planetStore.setPlanet(planet)
+  const currentTime = new Date().getTime()
+  const cache = JSON.parse(localStorage.getItem(url) as string)
+  if (cache && ((cache.cachedTime + EXPIRATION_TIME) > currentTime)) {
+    planetStore.setPlanet(cache.planet)
   } else {
-    await planetStore.getPlanet(url)
-    cachedRelation[url] = planet.value?.name
-    localStorage.setItem('cachedRelation', JSON.stringify(cachedRelation))
-    localStorage.setItem(planet.value?.name as string, JSON.stringify(planet.value))
+    await setPlanet(url, currentTime)
   }
   if (!person.planetName) person.planetName = planet.value?.name
   emit('checkLoading', false)
   isPopupOpened.value = true
+}
+
+const setPlanet = async (url: string, cachedTime: number) => {
+  await planetStore.getPlanet(url)
+  const objectToCache = {
+    planet: planet.value,
+    cachedTime
+  }
+  localStorage.setItem(url, JSON.stringify(objectToCache))
 }
 
 const closePopup = () => (isPopupOpened.value = false)
