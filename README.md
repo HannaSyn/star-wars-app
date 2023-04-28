@@ -4,6 +4,8 @@ Created with Vue 3 (Composition Api), Typescript, Pinia, axios.
 
 For caching data used Local Storage.
 
+Using [swapi](https://swapi.dev/) Api
+
 ## Project Setup
 
 ```sh
