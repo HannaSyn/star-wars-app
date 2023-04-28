@@ -1,14 +1,10 @@
 <script setup lang="ts">
 import { RouterView } from 'vue-router'
-import Header from '@/components/Header.vue'
-
+import MainHeader from '@/components/MainHeader.vue'
 </script>
 
 <template>
-  <Header />
-
+  <MainHeader />
   <RouterView />
-  <footer class="footer">
-    May the Force be with you.
-  </footer>
+  <footer class="footer">May the Force be with you.</footer>
 </template>
