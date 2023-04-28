@@ -77,13 +77,16 @@ const planet = computed(() => planetStore.planet)
 const sortArray = (sortBy: string, sortType: string) => {
   people.value.sort((firstEl: any, secondEl: any) => {
     if (secondEl[sortBy] === 'unknown' || !secondEl[sortBy]) return -1
-    if (sortBy === 'created' || sortBy === 'edited') {
-      return sortedByDate(firstEl[sortBy], secondEl[sortBy], sortType)
+    switch (sortBy) {
+      case 'created':
+      case 'edited':
+        return sortedByDate(firstEl[sortBy], secondEl[sortBy], sortType)
+      case 'name':
+      case 'planetName':
+        return sortedByString(firstEl[sortBy], secondEl[sortBy], sortType)
+      default:
+      return sortedByNumber(firstEl[sortBy], secondEl[sortBy], sortType)
     }
-    if (sortBy === 'name' || sortBy === 'planetName') {
-      return sortedByString(firstEl[sortBy], secondEl[sortBy], sortType)
-    }
-    return sortedByNumber(firstEl[sortBy], secondEl[sortBy], sortType)
   })
 }
 
@@ -108,7 +111,7 @@ const sortedByNumber = (firstEl: any, secondEl: any, sortType: string) => {
 }
 
 const sortedByString = (firstEl: any, secondEl: any, sortType: string) => {
-  return sortType === 'DESC' ? (secondEl > firstEl ? -1 : 1) : secondEl < firstEl ? -1 : 1
+  return sortType === 'DESC' ? (secondEl > firstEl ? -1 : 1) : (secondEl < firstEl ? -1 : 1)
 }
 
 const getPaginatedPeople = async (page: number) => {

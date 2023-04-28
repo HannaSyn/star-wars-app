@@ -43,6 +43,12 @@
   &:hover {
     opacity: 0.85;
   }
+
+  &:disabled {
+    background-color: #a3b4c0;
+    opacity: 0.85;
+    cursor: not-allowed;
+  }
 }
 
 .table {
@@ -197,11 +203,16 @@
   margin-top: 24px;
   display: flex;
   justify-content: flex-end;
+  align-items: center;
 
   &-button {
     margin-right: 10px;
     width: 55px;
     height: 35px;
+  }
+
+  &-pages {
+    margin-right: 14px;
   }
 }
 

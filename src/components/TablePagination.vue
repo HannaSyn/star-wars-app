@@ -21,6 +21,7 @@ const paginate = (page: number) => {
 </script>
 <template>
   <div class="pagination">
+    <span class="pagination-pages">{{ props.currentPage }} of {{ Math.ceil(props.total / 10) }}</span>
     <button
       class="pagination-button button"
       :disabled="props.currentPage <= 1"
